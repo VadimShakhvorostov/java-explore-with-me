@@ -8,6 +8,4 @@ import ru.practicum.server.entity.StatEntity;
 public interface StatsMapper {
     StatDto toStatDto(StatEntity statEntity);
 
-    StatEntity toStatEntity(StatDto statDto);
-
 }

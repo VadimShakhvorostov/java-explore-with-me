@@ -19,6 +19,32 @@ public interface StatsRepository extends JpaRepository<HitEntity, Long> {
             group by h.app, h.uri
             order by count(distinct h.ip) desc
             """)
-    List<StatEntity> findAll(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique);
+    List<StatEntity> findAllWithUrisUnique(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique);
 
+    @Query("""
+            Select new ru.practicum.server.entity.StatEntity(h.app, h.uri, count(h.ip))
+            from HitEntity h
+            WHERE h.timestamp between ?1 and ?2 and h.uri in (?3)
+            group by h.app, h.uri
+            order by count(distinct h.ip) desc
+            """)
+    List<StatEntity> findAllWithUrisNotUnique(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique);
+
+    @Query("""
+            Select new ru.practicum.server.entity.StatEntity(h.app, h.uri, count(distinct h.ip))
+            from HitEntity h
+            WHERE h.timestamp between ?1 and ?2
+            group by h.app, h.uri
+            order by count(distinct h.ip) desc
+            """)
+    List<StatEntity> findAllWithoutUrisUnique(LocalDateTime start, LocalDateTime end, boolean unique);
+
+    @Query("""
+            Select new ru.practicum.server.entity.StatEntity(h.app, h.uri, count((h.ip)))
+            from HitEntity h
+            WHERE h.timestamp between ?1 and ?2
+            group by h.app, h.uri
+            order by count(distinct h.ip) desc
+            """)
+    List<StatEntity> findAllWithoutUrisNotUnique(LocalDateTime start, LocalDateTime end, boolean unique);
 }

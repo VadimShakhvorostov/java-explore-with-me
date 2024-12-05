@@ -26,6 +26,35 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<StatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        return statsRepository.findAll(start, end, uris, unique).stream().map(statsMapper::toStatDto).toList();
+
+        if (uris.isEmpty()) {
+            if (unique) {
+                return statsRepository
+                        .findAllWithoutUrisUnique(start, end, true)
+                        .stream()
+                        .map(statsMapper::toStatDto)
+                        .toList();
+            } else {
+                return statsRepository
+                        .findAllWithoutUrisNotUnique(start, end, false)
+                        .stream()
+                        .map(statsMapper::toStatDto)
+                        .toList();
+            }
+        } else {
+            if (unique) {
+                return statsRepository
+                        .findAllWithUrisUnique(start, end, uris, true)
+                        .stream()
+                        .map(statsMapper::toStatDto)
+                        .toList();
+            } else {
+                return statsRepository
+                        .findAllWithUrisNotUnique(start, end, uris, false)
+                        .stream()
+                        .map(statsMapper::toStatDto)
+                        .toList();
+            }
+        }
     }
 }

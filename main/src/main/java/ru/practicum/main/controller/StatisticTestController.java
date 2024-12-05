@@ -1,29 +1,28 @@
-package ru.practicum.server.controller;
+package ru.practicum.main.controller;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.client.StatsClient;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.StatDto;
-import ru.practicum.server.service.StatsServiceImpl;
-import ru.practicum.server.util.DateFormat;
 
 import java.util.List;
 
 @RestController
 @RequestMapping
-@AllArgsConstructor
-public class StatsController {
+public class StatisticTestController {
 
-    private final StatsServiceImpl statsService;
+    @Autowired
+    StatsClient statsClient;
 
     @PostMapping("/hit")
-    public void addHit(@RequestBody HitDto hitDto) {
-        statsService.addHit(hitDto);
+    public void test(@RequestBody HitDto hitDto) {
+        statsClient.addHit(hitDto);
     }
 
     @GetMapping("/stats")
@@ -33,7 +32,6 @@ public class StatsController {
             @RequestParam(required = false) List<String> uris,
             @RequestParam(required = false, defaultValue = "false") boolean unique
     ) {
-        return statsService
-                .getStats(DateFormat.toLocaleDateTime(start), DateFormat.toLocaleDateTime(end), uris, unique);
+        return statsClient.getStats(start, end, uris, unique);
     }
 }
