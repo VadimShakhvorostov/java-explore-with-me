@@ -30,13 +30,13 @@ public class StatsServiceImpl implements StatsService {
         if (uris == null || uris.isEmpty()) {
             if (unique) {
                 return statsRepository
-                        .findAllWithoutUrisUnique(start, end, true)
+                        .findAllWithoutUrisUnique(start, end)
                         .stream()
                         .map(statsMapper::toStatDto)
                         .toList();
             } else {
                 return statsRepository
-                        .findAllWithoutUrisNotUnique(start, end, false)
+                        .findAllWithoutUrisNotUnique(start, end)
                         .stream()
                         .map(statsMapper::toStatDto)
                         .toList();
@@ -44,13 +44,13 @@ public class StatsServiceImpl implements StatsService {
         } else {
             if (unique) {
                 return statsRepository
-                        .findAllWithUrisUnique(start, end, uris, true)
+                        .findAllWithUrisUnique(start, end, uris)
                         .stream()
                         .map(statsMapper::toStatDto)
                         .toList();
             } else {
                 return statsRepository
-                        .findAllWithUrisNotUnique(start, end, uris, false)
+                        .findAllWithUrisNotUnique(start, end, uris)
                         .stream()
                         .map(statsMapper::toStatDto)
                         .toList();
