@@ -26,7 +26,7 @@ public interface StatsRepository extends JpaRepository<HitEntity, Long> {
             from HitEntity h
             WHERE h.timestamp between ?1 and ?2 and h.uri in (?3)
             group by h.app, h.uri
-            order by count(distinct h.ip) desc
+            order by count( h.ip) desc
             """)
     List<StatEntity> findAllWithUrisNotUnique(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique);
 
@@ -35,7 +35,7 @@ public interface StatsRepository extends JpaRepository<HitEntity, Long> {
             from HitEntity h
             WHERE h.timestamp between ?1 and ?2
             group by h.app, h.uri
-            order by count(distinct h.ip) desc
+            order by count(h.ip) desc
             """)
     List<StatEntity> findAllWithoutUrisUnique(LocalDateTime start, LocalDateTime end, boolean unique);
 
@@ -44,7 +44,7 @@ public interface StatsRepository extends JpaRepository<HitEntity, Long> {
             from HitEntity h
             WHERE h.timestamp between ?1 and ?2
             group by h.app, h.uri
-            order by count(distinct h.ip) desc
+            order by count( h.ip) desc
             """)
     List<StatEntity> findAllWithoutUrisNotUnique(LocalDateTime start, LocalDateTime end, boolean unique);
 }
