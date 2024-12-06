@@ -15,13 +15,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-public class StatisticTestController {
+public class StatisticController {
 
     @Autowired
     StatsClient statsClient;
 
     @PostMapping("/hit")
-    public void test(@RequestBody HitDto hitDto) {
+    public void addHit(@RequestBody HitDto hitDto) {
         statsClient.addHit(hitDto);
     }
 
