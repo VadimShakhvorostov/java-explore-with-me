@@ -38,6 +38,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -333,8 +334,8 @@ public class EventServiceImpl implements EventService {
 
         List<EventEntity> eventEntities = typedQuery.getResultList();
 
-        sendStat(eventEntities, httpServletRequest);
-        setView(eventEntities, httpServletRequest);
+        sendStatList(eventEntities, httpServletRequest);
+        setViewList(eventEntities, httpServletRequest);
         return typedQuery.getResultList().stream().map(eventMapper::toEventResponse).toList();
     }
 
@@ -345,32 +346,40 @@ public class EventServiceImpl implements EventService {
         if (!eventEntity.getState().equals(States.PUBLISHED)) {
             throw new NotFoundException("Event with id=" + eventId + " was not found");
         }
-        sendStat(List.of(eventEntity), httpServletRequest);
-        setView(List.of(eventEntity), httpServletRequest);
-
+        sendStat(httpServletRequest);
+        setView(eventEntity, httpServletRequest);
         return eventMapper.toEventResponse(eventEntity);
     }
 
     private void validateUserId(long userId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " not found"));
-
     }
 
-    private void sendStat(List<EventEntity> eventEntities, HttpServletRequest httpServletRequest) {
+    private void sendStatList(List<EventEntity> eventEntities, HttpServletRequest httpServletRequest) {
 
+        HitDto hitDto = new HitDto();
+        hitDto.setApp("ewm-main-service");
+        hitDto.setIp(httpServletRequest.getRemoteAddr());
+        hitDto.setTimestamp(LocalDateTime.now().format(dateTimeFormatter));
         for (EventEntity event : eventEntities) {
-            HitDto hitDto = new HitDto();
-            hitDto.setApp("ewm-main-service");
             hitDto.setUri(httpServletRequest.getRequestURI() + "/" + event.getId());
-            hitDto.setIp(httpServletRequest.getRemoteAddr());
-            hitDto.setTimestamp(LocalDateTime.now().format(dateTimeFormatter));
             statsClient.addHit(hitDto);
         }
+        hitDto.setUri(httpServletRequest.getRequestURI());
+        statsClient.addHit(hitDto);
     }
 
+    private void sendStat(HttpServletRequest httpServletRequest) {
+        HitDto hitDto = new HitDto();
+        hitDto.setApp("ewm-main-service");
+        hitDto.setUri(httpServletRequest.getRequestURI());
+        hitDto.setIp(httpServletRequest.getRemoteAddr());
+        hitDto.setTimestamp(LocalDateTime.now().format(dateTimeFormatter));
+        statsClient.addHit(hitDto);
 
-    private void setView(List<EventEntity> eventEntities, HttpServletRequest httpServletRequest) {
+    }
 
+    private void setViewList(List<EventEntity> eventEntities, HttpServletRequest httpServletRequest) {
         String start = eventEntities.stream().min(Comparator.comparing(EventEntity::getCreatedOn)).orElseThrow().getCreatedOn().format(dateTimeFormatter);
         String end = LocalDateTime.now().format(dateTimeFormatter);
 
@@ -394,4 +403,19 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    private void setView(EventEntity eventEntities, HttpServletRequest httpServletRequest) {
+        String start = eventEntities.getCreatedOn().format(dateTimeFormatter);
+        String end = LocalDateTime.now().format(dateTimeFormatter);
+
+        String uris = httpServletRequest.getRequestURI();
+
+
+        List<StatDto> statDtos = statsClient.getStats(
+                start,
+                end,
+                Arrays.asList(uris),
+                true);
+
+        eventEntities.setViews(statDtos.getFirst().getHits());
+    }
 }
