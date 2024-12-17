@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.practicum.client.StatsClient;
+import ru.practicum.dto.HitDto;
+import ru.practicum.dto.StatDto;
 import ru.practicum.main.dto.events.EventSimpleResponse;
 import ru.practicum.main.dto.events.EventRequest;
 import ru.practicum.main.dto.events.EventResponse;
@@ -32,8 +35,13 @@ import ru.practicum.main.repositories.users.UserEntity;
 import ru.practicum.main.repositories.users.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -45,6 +53,8 @@ public class EventServiceImpl implements EventService {
     private final EventMapper eventMapper;
     private final CategoriesRepository catRepository;
     private final EntityManager entityManager;
+    private final StatsClient statsClient;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public EventResponse addEvent(long userId, EventRequest eventRequest) {
@@ -186,6 +196,7 @@ public class EventServiceImpl implements EventService {
         if (eventUpdateRequestAdmin.getStateAction() != null) {
             if (eventUpdateRequestAdmin.getStateAction().equals(StateActionAdmin.PUBLISH_EVENT)) {
                 eventEntity.setState(States.PUBLISHED);
+                eventEntity.setPublishedOn(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
             } else {
                 eventEntity.setState(States.CANCELED);
             }
@@ -320,13 +331,11 @@ public class EventServiceImpl implements EventService {
         typedQuery.setFirstResult(from);
         typedQuery.setMaxResults(size);
 
-
         List<EventEntity> eventEntities = typedQuery.getResultList();
 
-
+        sendStat(eventEntities, httpServletRequest);
+        setView(eventEntities, httpServletRequest);
         return typedQuery.getResultList().stream().map(eventMapper::toEventResponse).toList();
-
-
     }
 
     @Override
@@ -336,6 +345,9 @@ public class EventServiceImpl implements EventService {
         if (!eventEntity.getState().equals(States.PUBLISHED)) {
             throw new NotFoundException("not found");
         }
+        sendStat(List.of(eventEntity), httpServletRequest);
+        setView(List.of(eventEntity), httpServletRequest);
+
         return eventMapper.toEventResponse(eventEntity);
     }
 
@@ -344,5 +356,42 @@ public class EventServiceImpl implements EventService {
 
     }
 
+    private void sendStat(List<EventEntity> eventEntities, HttpServletRequest httpServletRequest) {
+
+        for (EventEntity event : eventEntities) {
+            HitDto hitDto = new HitDto();
+            hitDto.setApp("ewm-main-service");
+            hitDto.setUri(httpServletRequest.getRequestURI() + "/" + event.getId());
+            hitDto.setIp(httpServletRequest.getRemoteAddr());
+            hitDto.setTimestamp(LocalDateTime.now().format(dateTimeFormatter));
+            statsClient.addHit(hitDto);
+        }
+    }
+
+
+    private void setView(List<EventEntity> eventEntities, HttpServletRequest httpServletRequest) {
+
+        String start = eventEntities.stream().min(Comparator.comparing(EventEntity::getCreatedOn)).orElseThrow().getCreatedOn().format(dateTimeFormatter);
+        String end = LocalDateTime.now().format(dateTimeFormatter);
+
+        List<String> uris = eventEntities
+                .stream()
+                .map(eventEntity -> httpServletRequest.getRequestURI() + "/" + eventEntity.getId())
+                .toList();
+
+        List<StatDto> statDtos = statsClient.getStats(
+                start,
+                end,
+                uris,
+                true);
+
+        Map<String, Long> viewMap = statDtos.stream().collect(Collectors.toMap(StatDto::getUri, StatDto::getHits));
+
+        for (EventEntity eventEntity : eventEntities) {
+            String uri = httpServletRequest.getRequestURI() + "/" + eventEntity.getId();
+            Long views = viewMap.getOrDefault(uri, 0L);
+            eventEntity.setViews(views);
+        }
+    }
 
 }

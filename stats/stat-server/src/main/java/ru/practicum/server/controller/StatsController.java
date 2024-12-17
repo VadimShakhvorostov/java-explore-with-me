@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.dto.HitDto;
 import ru.practicum.dto.StatDto;
 import ru.practicum.server.service.StatsServiceImpl;
+import ru.practicum.server.util.DateFormat;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +23,7 @@ import java.util.List;
 public class StatsController {
 
     private final StatsServiceImpl statsService;
-    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'%'HH:mm:ss");
 
     @PostMapping("/hit")
     public void addHit(@RequestBody HitDto hitDto) {
@@ -40,8 +41,9 @@ public class StatsController {
         LocalDateTime endDT;
 
         try {
-            startDT = LocalDateTime.parse(start, dateFormat);
-            endDT = LocalDateTime.parse(end, dateFormat);
+            startDT = DateFormat.toLocaleDateTime(start);
+            endDT = DateFormat.toLocaleDateTime(end);
+
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid date format");
         }
