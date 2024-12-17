@@ -59,12 +59,12 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse addEvent(long userId, EventRequest eventRequest) {
         if (eventRequest.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new RequestException("conflict date");
+            throw new RequestException("Event date is earlier than 2 hours");
         }
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
         CategoriesEntity categoriesEntity = catRepository.findById(eventRequest.getCategory())
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Category  with id=" + eventRequest.getCategory() + " was not found"));
         EventEntity eventEntity = eventMapper.toEventEntity(eventRequest, categoriesEntity, userEntity);
         return eventMapper.toEventResponse(eventsRepository.save(eventEntity));
     }
@@ -81,7 +81,7 @@ public class EventServiceImpl implements EventService {
     public EventResponse getFullEventByUserId(long userId, long eventId) {
         validateUserId(userId);
         EventEntity eventEntity = eventsRepository.getEventByIdAndInitiator_Id(eventId, userId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
         return eventMapper.toEventResponse(eventEntity);
     }
 
@@ -141,26 +141,26 @@ public class EventServiceImpl implements EventService {
         log.info("updateEvent, id = {}, eventUpdateRequest = {} ", eventId, eventUpdateRequestAdmin);
 
         EventEntity eventEntity = eventsRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
 
         if (eventUpdateRequestAdmin.getEventDate() != null
-                && eventUpdateRequestAdmin.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
-            throw new DateException("conflict date");
+                && eventUpdateRequestAdmin.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new DateException("Date is earlier than 2 hours");
         }
         if (!eventEntity.getState().equals(States.PENDING)
                 && eventUpdateRequestAdmin.getStateAction().equals(StateActionAdmin.PUBLISH_EVENT)) {
-            throw new RequestException("conflict state");
+            throw new RequestException("Only events with the pending status can be published");
         }
         if (eventEntity.getState().equals(States.PUBLISHED)
                 && eventUpdateRequestAdmin.getStateAction().equals(StateActionAdmin.REJECT_EVENT)) {
-            throw new RequestException("conflict state");
+            throw new RequestException("Published events cannot be rejected");
         }
         eventEntity.setAnnotation(eventUpdateRequestAdmin.getAnnotation() == null
                 ? eventEntity.getAnnotation() : eventUpdateRequestAdmin.getAnnotation());
 
         if (eventUpdateRequestAdmin.getCategory() != null) {
             CategoriesEntity categoriesEntity = catRepository.findById(eventUpdateRequestAdmin.getCategory())
-                    .orElseThrow(() -> new NotFoundException("categories not found"));
+                    .orElseThrow(() -> new NotFoundException("Categories with id=" + eventUpdateRequestAdmin.getCategory() + " not found"));
             eventEntity.setCategory(eventUpdateRequestAdmin.getCategory() == null
                     ? eventEntity.getCategory() : categoriesEntity);
         }
@@ -208,23 +208,23 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse updateOwnerEvent(long userId, long eventId, EventUpdateRequestUser eventUpdateRequestUser) {
         if (!eventsRepository.existsByIdAndInitiator_Id(eventId, userId)) {
-            throw new NotFoundException("not found");
+            throw new NotFoundException("Event with id=" + eventId + " users with id=" + userId + " was not found");
         }
         validateUserId(userId);
         EventEntity eventEntity = eventsRepository
-                .findById(eventId).orElseThrow(() -> new NotFoundException("not found"));
+                .findById(eventId).orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
 
         if (eventEntity.getState().equals(States.PUBLISHED)) {
-            throw new RequestException("event published");
+            throw new RequestException("Only pending or canceled events can be changed");
         }
 
         if (eventEntity.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new DateException("conflict date");
+            throw new DateException("Event date is earlier than 2 hours");
         }
 
         if (eventUpdateRequestUser.getEventDate() != null &&
                 eventUpdateRequestUser.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new DateException("conflict date");
+            throw new DateException("Date is earlier than 2 hours");
         }
 
         eventEntity.setAnnotation(eventUpdateRequestUser.getAnnotation() == null
@@ -232,7 +232,7 @@ public class EventServiceImpl implements EventService {
 
         if (eventUpdateRequestUser.getCategory() != null) {
             CategoriesEntity categoriesEntity = catRepository.findById(eventUpdateRequestUser.getCategory())
-                    .orElseThrow(() -> new NotFoundException("categories not found"));
+                    .orElseThrow(() -> new NotFoundException("Categories with id=" + eventUpdateRequestUser.getCategory() + " not found"));
             eventEntity.setCategory(eventUpdateRequestUser.getCategory() == null
                     ? eventEntity.getCategory() : categoriesEntity);
         }
@@ -341,9 +341,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse getEventById(long eventId, HttpServletRequest httpServletRequest) {
         EventEntity eventEntity = eventsRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("not found"));
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
         if (!eventEntity.getState().equals(States.PUBLISHED)) {
-            throw new NotFoundException("not found");
+            throw new NotFoundException("Event with id=" + eventId + " was not found");
         }
         sendStat(List.of(eventEntity), httpServletRequest);
         setView(List.of(eventEntity), httpServletRequest);

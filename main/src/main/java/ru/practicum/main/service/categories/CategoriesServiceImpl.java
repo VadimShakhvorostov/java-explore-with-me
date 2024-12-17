@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.main.dto.categories.CategoriesRequest;
 import ru.practicum.main.dto.categories.CategoriesResponse;
 import ru.practicum.main.dto.categories.mapper.CategoriesMapper;
+import ru.practicum.main.exception.ConstraintException;
 import ru.practicum.main.exception.NotFoundException;
 import ru.practicum.main.exception.RequestException;
 import ru.practicum.main.repositories.categories.CategoriesEntity;
@@ -27,7 +28,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public CategoriesResponse addCategories(CategoriesRequest categoriesRequest) {
         if (categoriesRepository.existsByName(categoriesRequest.getName())) {
-            throw new RequestException("name exists");
+            throw new ConstraintException("Integrity constraint has been violated.");
         }
         CategoriesEntity categoriesEntity = categoriesMapper.toCategoriesEntity(categoriesRequest);
         return categoriesMapper.toCategoriesResponse(categoriesRepository.save(categoriesEntity));
@@ -37,18 +38,15 @@ public class CategoriesServiceImpl implements CategoriesService {
     public void deleteCategories(long catId) {
         validateId(catId);
         if (eventsRepository.existsByCategory_Id(catId)) {
-            throw new RequestException("categories using");
+            throw new RequestException("The category is not empty");
         }
         categoriesRepository.deleteById(catId);
     }
 
     @Override
     public CategoriesResponse updateCategories(long catId, CategoriesRequest categoriesRequest) {
-        if (categoriesRepository.existsByNameAndIdNot(categoriesRequest.getName(), catId)) {
-            throw new RequestException("name exists");
-        }
         CategoriesEntity categoriesEntity = categoriesRepository.findById(catId)
-                .orElseThrow(() -> new NotFoundException("not found"));
+                .orElseThrow(() -> new NotFoundException("Categories with id=" + catId + " not found"));
         categoriesEntity.setName(categoriesRequest.getName());
         return categoriesMapper.toCategoriesResponse(categoriesRepository.save(categoriesEntity));
     }
@@ -56,12 +54,11 @@ public class CategoriesServiceImpl implements CategoriesService {
     private void validateId(long catId) {
         log.info("validateId, catId {}", catId);
         categoriesRepository.findById(catId)
-                .orElseThrow(() -> new NotFoundException("Categories with id " + catId + " not found"));
+                .orElseThrow(() -> new NotFoundException("Categories with id=" + catId + " not found"));
     }
 
     @Override
     public List<CategoriesResponse> getCategories(int from, int size) {
-
         return categoriesRepository.findAll(PageRequest.of(from, size))
                 .map(categoriesMapper::toCategoriesResponse)
                 .toList();

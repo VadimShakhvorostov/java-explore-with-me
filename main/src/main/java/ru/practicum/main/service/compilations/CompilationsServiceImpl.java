@@ -44,14 +44,15 @@ public class CompilationsServiceImpl implements CompilationsService {
 
     @Override
     public void deleteCompilations(Long compId) {
-        compilationsRepository.findById(compId).orElseThrow(() -> new NotFoundException("not found"));
+        compilationsRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
         compilationsRepository.deleteById(compId);
     }
 
     @Override
     public CompilationResponse updateCompilations(long compId, CompilationUpdateRequest compilationRequest) {
         CompilationEntity compilationEntity = compilationsRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("not found"));
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
 
         List<EventEntity> eventEntities;
         if (compilationRequest.getEvents() != null) {
@@ -80,7 +81,7 @@ public class CompilationsServiceImpl implements CompilationsService {
     @Override
     public CompilationResponse getCompilation(long compId) {
         CompilationEntity compilationEntity = compilationsRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("not found"));
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
         return compilationsMapper.toCompilationResponse(compilationEntity);
     }
 }

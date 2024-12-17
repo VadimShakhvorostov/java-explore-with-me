@@ -34,19 +34,19 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public RequestDtoResponse addRequestUser(Long userId, Long eventId) {
 
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
-        EventEntity eventEntity = eventsRepository.findById(eventId).orElseThrow(() -> new NotFoundException("event not found"));
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " not found"));
+        EventEntity eventEntity = eventsRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event with id " + eventId + " not found"));
 
         if (requestRepository.existsByEventAndRequester(eventId, userId)) {
-            throw new RequestException("repeated request");
+            throw new RequestException("Repeated request");
         }
 
         if (eventsRepository.existsByIdAndInitiator_Id(eventId, userId)) {
-            throw new RequestException("self request");
+            throw new RequestException("Self request");
         }
 
         if (!eventEntity.getState().equals(States.PUBLISHED)) {
-            throw new RequestException("not published");
+            throw new RequestException("Not published");
         }
 
 
@@ -77,7 +77,7 @@ public class RequestServiceImpl implements RequestService {
 
         if (eventEntity.getParticipantLimit() != 0 && eventEntity.getRequestModeration().equals(false)) {
             if (isConfirm) {
-                throw new RequestException("limit");
+                throw new RequestException("The participant limit has been reached");
             }
             requestEntity.setStatus(Status.CONFIRMED);
             eventEntity.setConfirmedRequests(eventEntity.getConfirmedRequests() + 1);
@@ -97,7 +97,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<RequestDtoResponse> getRequestsEventUsers(long userId, long eventId) {
         if (!eventsRepository.existsByIdAndInitiator_Id(eventId, userId)) {
-            throw new NotFoundException("event not found");
+            throw new NotFoundException("Event with id " + eventId + " not found");
         }
         return requestRepository.findAllByEvent(eventId).stream().map(requestMapper::toRequestDto).toList();
     }
@@ -106,7 +106,7 @@ public class RequestServiceImpl implements RequestService {
     public RequestDtoResponse cancelRequestUser(long userId, long requestId) {
         validateUserId(userId);
         RequestEntity requestEntity = requestRepository.findById(requestId)
-                .orElseThrow(() -> new NotFoundException("request not found"));
+                .orElseThrow(() -> new NotFoundException("Request with id " + requestId + " not found"));
         if (requestEntity.getRequester() != userId) {
             throw new RequestException("not authorized");
         }
@@ -119,20 +119,20 @@ public class RequestServiceImpl implements RequestService {
     public RequestListResponse changeStatusRequestUser(long userId, long eventId, RequestRequest requestRequest) {
         validateUserId(userId);
         EventEntity eventEntity = eventsRepository.findById(eventId)
-                .orElseThrow(() -> new NotFoundException("event not found"));
+                .orElseThrow(() -> new NotFoundException("Event with id " + eventId + " not found"));
 
         if (eventEntity.getParticipantLimit() == 0 || !eventEntity.getRequestModeration()) {
             return new RequestListResponse();
         }
 
         if (eventEntity.getConfirmedRequests() >= eventEntity.getParticipantLimit()) {
-            throw new RequestException("limit exceeded");
+            throw new RequestException("Limit exceeded");
         }
 
         List<RequestEntity> requestEntity = requestRepository.findAllById(requestRequest.getRequestIds());
 
         if (requestEntity.stream().anyMatch(request -> request.getStatus() != Status.PENDING)) {
-            throw new RequestException("not authorized");
+            throw new RequestException("Not authorized");
         }
 
         List<RequestDtoResponse> confirmedRequests = new ArrayList<>();

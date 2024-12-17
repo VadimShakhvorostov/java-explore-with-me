@@ -8,7 +8,6 @@ import ru.practicum.main.dto.users.UserRequest;
 import ru.practicum.main.dto.users.UserResponse;
 import ru.practicum.main.dto.users.mapper.UserMapper;
 import ru.practicum.main.exception.NotFoundException;
-import ru.practicum.main.exception.RequestException;
 import ru.practicum.main.repositories.users.UserEntity;
 import ru.practicum.main.repositories.users.UserRepository;
 
@@ -36,9 +35,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse addUser(UserRequest userRequest) {
-        if (userRepository.existsByEmailIgnoreCase(userRequest.getEmail().toLowerCase())) {
-            throw new RequestException("exists email");
-        }
         UserEntity userEntity = userRepository.save(userMapper.toUserEntity(userRequest));
         return userMapper.toUserResponse(userEntity);
     }
