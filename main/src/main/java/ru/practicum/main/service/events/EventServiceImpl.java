@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +28,8 @@ import ru.practicum.main.enums.States;
 import ru.practicum.main.exception.DateException;
 import ru.practicum.main.exception.NotFoundException;
 import ru.practicum.main.exception.RequestException;
-import ru.practicum.main.repositories.categories.CategoriesEntity;
-import ru.practicum.main.repositories.categories.CategoriesRepository;
+import ru.practicum.main.repositories.categories.CategoryEntity;
+import ru.practicum.main.repositories.categories.CategoryRepository;
 import ru.practicum.main.repositories.events.EventEntity;
 import ru.practicum.main.repositories.events.EventsRepository;
 import ru.practicum.main.repositories.users.UserEntity;
@@ -52,21 +53,22 @@ public class EventServiceImpl implements EventService {
     private final EventsRepository eventsRepository;
     private final UserRepository userRepository;
     private final EventMapper eventMapper;
-    private final CategoriesRepository catRepository;
+    private final CategoryRepository catRepository;
     private final EntityManager entityManager;
     private final StatsClient statsClient;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
+    @Transactional
     public EventResponse addEvent(long userId, EventRequest eventRequest) {
         if (eventRequest.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
             throw new RequestException("Event date is earlier than 2 hours");
         }
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
-        CategoriesEntity categoriesEntity = catRepository.findById(eventRequest.getCategory())
+        CategoryEntity categoryEntity = catRepository.findById(eventRequest.getCategory())
                 .orElseThrow(() -> new NotFoundException("Category  with id=" + eventRequest.getCategory() + " was not found"));
-        EventEntity eventEntity = eventMapper.toEventEntity(eventRequest, categoriesEntity, userEntity);
+        EventEntity eventEntity = eventMapper.toEventEntity(eventRequest, categoryEntity, userEntity);
         return eventMapper.toEventResponse(eventsRepository.save(eventEntity));
     }
 
@@ -137,6 +139,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventResponse updateEvent(long eventId, EventUpdateRequestAdmin eventUpdateRequestAdmin) {
 
         log.info("updateEvent, id = {}, eventUpdateRequest = {} ", eventId, eventUpdateRequestAdmin);
@@ -160,10 +163,10 @@ public class EventServiceImpl implements EventService {
                 ? eventEntity.getAnnotation() : eventUpdateRequestAdmin.getAnnotation());
 
         if (eventUpdateRequestAdmin.getCategory() != null) {
-            CategoriesEntity categoriesEntity = catRepository.findById(eventUpdateRequestAdmin.getCategory())
+            CategoryEntity categoryEntity = catRepository.findById(eventUpdateRequestAdmin.getCategory())
                     .orElseThrow(() -> new NotFoundException("Categories with id=" + eventUpdateRequestAdmin.getCategory() + " not found"));
             eventEntity.setCategory(eventUpdateRequestAdmin.getCategory() == null
-                    ? eventEntity.getCategory() : categoriesEntity);
+                    ? eventEntity.getCategory() : categoryEntity);
         }
 
         eventEntity.setDescription(eventUpdateRequestAdmin.getDescription() == null
@@ -207,6 +210,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventResponse updateOwnerEvent(long userId, long eventId, EventUpdateRequestUser eventUpdateRequestUser) {
         if (!eventsRepository.existsByIdAndInitiator_Id(eventId, userId)) {
             throw new NotFoundException("Event with id=" + eventId + " users with id=" + userId + " was not found");
@@ -232,10 +236,10 @@ public class EventServiceImpl implements EventService {
                 ? eventEntity.getAnnotation() : eventUpdateRequestUser.getAnnotation());
 
         if (eventUpdateRequestUser.getCategory() != null) {
-            CategoriesEntity categoriesEntity = catRepository.findById(eventUpdateRequestUser.getCategory())
+            CategoryEntity categoryEntity = catRepository.findById(eventUpdateRequestUser.getCategory())
                     .orElseThrow(() -> new NotFoundException("Categories with id=" + eventUpdateRequestUser.getCategory() + " not found"));
             eventEntity.setCategory(eventUpdateRequestUser.getCategory() == null
-                    ? eventEntity.getCategory() : categoriesEntity);
+                    ? eventEntity.getCategory() : categoryEntity);
         }
 
         eventEntity.setDescription(eventUpdateRequestUser.getDescription() == null

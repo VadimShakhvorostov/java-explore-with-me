@@ -1,6 +1,7 @@
 package ru.practicum.main.controller.publi;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/events")
 @AllArgsConstructor
 public class PublicEventsController {
 
@@ -24,7 +25,7 @@ public class PublicEventsController {
 
     private final EventService eventService;
 
-    @GetMapping("/events")
+    @GetMapping
     public List<EventResponse> getPublicEvents(
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Long> categories,
@@ -34,7 +35,7 @@ public class PublicEventsController {
             @RequestParam(required = false) Boolean onlyAvailable,
             @RequestParam(required = false) Sort sort,
             @RequestParam(required = false, defaultValue = "0") int from,
-            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size,
             HttpServletRequest httpServletRequest) {
 
         LocalDateTime start = rangeStart != null ? LocalDateTime.parse(rangeStart, dateTimeFormatter) : null;
@@ -43,7 +44,7 @@ public class PublicEventsController {
         return eventService.getPublicEvents(text, categories, paid, start, end, onlyAvailable, sort, from, size, httpServletRequest);
     }
 
-    @GetMapping("/events/{eventId}")
+    @GetMapping("/{eventId}")
     public EventResponse getEventsById(@PathVariable Long eventId, HttpServletRequest httpServletRequest) {
         return eventService.getEventById(eventId, httpServletRequest);
     }

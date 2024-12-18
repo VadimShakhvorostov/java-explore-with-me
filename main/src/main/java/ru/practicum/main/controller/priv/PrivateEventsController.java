@@ -1,6 +1,7 @@
-package ru.practicum.main.controller.privat;
+package ru.practicum.main.controller.priv;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,35 +23,35 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping
+@RequestMapping("/users/{userId}/events")
 @AllArgsConstructor
 public class PrivateEventsController {
 
     private final EventService eventService;
 
-    @GetMapping("/users/{userId}/events")
+    @GetMapping
     public List<EventSimpleResponse> getEventsByUserId(
             @PathVariable long userId,
             @RequestParam(defaultValue = "0") int from,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") @PositiveOrZero int size) {
 
         return eventService.getEventsByUserId(userId, from, size);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/users/{userId}/events")
+    @PostMapping
     public EventResponse addEvent(
             @PathVariable long userId,
             @RequestBody @Valid EventRequest eventRequest) {
         return eventService.addEvent(userId, eventRequest);
     }
 
-    @GetMapping("/users/{userId}/events/{eventId}")
+    @GetMapping("/{eventId}")
     public EventResponse getFullEventByUserId(@PathVariable long userId, @PathVariable long eventId) {
         return eventService.getFullEventByUserId(userId, eventId);
     }
 
-    @PatchMapping("/users/{userId}/events/{eventId}")
+    @PatchMapping("/{eventId}")
     public EventResponse updateOwnerEvent(
             @PathVariable long userId,
             @PathVariable long eventId,

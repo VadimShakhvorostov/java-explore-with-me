@@ -1,6 +1,7 @@
 package ru.practicum.main.controller.admin;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,28 +20,28 @@ import ru.practicum.main.service.users.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/users")
 @AllArgsConstructor
 public class AdminUserController {
 
     private final UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping
     public List<UserResponse> getUsers(
             @RequestParam(required = false) List<Long> ids,
             @RequestParam(defaultValue = "0") int from,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") @PositiveOrZero int size
     ) {
         return userService.getUsers(ids, from, size);
     }
 
-    @PostMapping("/users")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse addUser(@RequestBody @Valid UserRequest userRequest) {
         return userService.addUser(userRequest);
     }
 
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable long userId) {
         userService.deleteUser(userId);

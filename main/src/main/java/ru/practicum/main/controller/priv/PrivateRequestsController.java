@@ -1,4 +1,4 @@
-package ru.practicum.main.controller.privat;
+package ru.practicum.main.controller.priv;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,14 +19,14 @@ import ru.practicum.main.service.requests.RequestService;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/users/{userId}")
 @AllArgsConstructor
 public class PrivateRequestsController {
 
     private final RequestService requestService;
 
 
-    @PatchMapping("/users/{userId}/events/{eventId}/requests")
+    @PatchMapping("/events/{eventId}/requests")
     public RequestListResponse changeStatusRequestUser(
             @PathVariable long userId,
             @PathVariable long eventId,
@@ -34,13 +34,13 @@ public class PrivateRequestsController {
         return requestService.changeStatusRequestUser(userId, eventId, requestRequest);
     }
 
-    @GetMapping("/users/{userId}/requests")
+    @GetMapping("/requests")
     public List<RequestDtoResponse> getRequestUser(@PathVariable long userId) {
         return requestService.getRequestUser(userId);
     }
 
 
-    @PostMapping("/users/{userId}/requests")
+    @PostMapping("/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public RequestDtoResponse addRequestUser(
             @PathVariable Long userId,
@@ -49,14 +49,14 @@ public class PrivateRequestsController {
     }
 
 
-    @GetMapping("/users/{userId}/events/{eventId}/requests")
+    @GetMapping("events/{eventId}/requests")
     public List<RequestDtoResponse> getRequestsEventUsers(
             @PathVariable long userId,
             @PathVariable long eventId) {
         return requestService.getRequestsEventUsers(userId, eventId);
     }
 
-    @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
+    @PatchMapping("requests/{requestId}/cancel")
     public RequestDtoResponse cancelRequestUser(
             @PathVariable long userId,
             @PathVariable long requestId

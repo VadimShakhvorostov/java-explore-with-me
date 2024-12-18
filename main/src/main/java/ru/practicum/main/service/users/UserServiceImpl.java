@@ -1,5 +1,6 @@
 package ru.practicum.main.service.users;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -34,12 +35,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponse addUser(UserRequest userRequest) {
         UserEntity userEntity = userRepository.save(userMapper.toUserEntity(userRequest));
         return userMapper.toUserResponse(userEntity);
     }
 
     @Override
+    @Transactional
     public void deleteUser(long userId) {
         log.trace("deleteUser, userId = {}", userId);
         validateUserId(userId);

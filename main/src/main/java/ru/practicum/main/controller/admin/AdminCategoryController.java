@@ -11,33 +11,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.main.dto.categories.CategoriesRequest;
-import ru.practicum.main.dto.categories.CategoriesResponse;
-import ru.practicum.main.service.categories.CategoriesService;
+import ru.practicum.main.dto.categories.CategoryRequest;
+import ru.practicum.main.dto.categories.CategoryResponse;
+import ru.practicum.main.service.categories.CategoryService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/categories")
 @AllArgsConstructor
-public class AdminCategoriesController {
+public class AdminCategoryController {
 
-    private final CategoriesService categoriesService;
+    private final CategoryService categoryService;
 
-    @PostMapping("/categories")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoriesResponse addCategories(@RequestBody @Valid CategoriesRequest categoriesDto) {
-        return categoriesService.addCategories(categoriesDto);
+    public CategoryResponse addCategories(@RequestBody @Valid CategoryRequest categoriesDto) {
+        return categoryService.addCategories(categoriesDto);
     }
 
-    @DeleteMapping("/categories/{catId}")
+    @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategories(@PathVariable long catId) {
-        categoriesService.deleteCategories(catId);
+        categoryService.deleteCategories(catId);
     }
 
-    @PatchMapping("/categories/{catId}")
-    public CategoriesResponse updateCategories(
+    @PatchMapping("/{catId}")
+    public CategoryResponse updateCategories(
             @PathVariable long catId,
-            @RequestBody @Valid CategoriesRequest categoriesRequest) {
-        return categoriesService.updateCategories(catId, categoriesRequest);
+            @RequestBody @Valid CategoryRequest categoryRequest) {
+        return categoryService.updateCategories(catId, categoryRequest);
     }
 }

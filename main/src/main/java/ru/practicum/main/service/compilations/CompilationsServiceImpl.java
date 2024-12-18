@@ -1,5 +1,6 @@
 package ru.practicum.main.service.compilations;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,11 @@ public class CompilationsServiceImpl implements CompilationsService {
     private final CompilationsMapper compilationsMapper;
 
     @Override
+    @Transactional
     public CompilationResponse addNewCompilations(CompilationRequest compilationRequest) {
 
         List<EventEntity> eventEntities = new ArrayList<>();
-        if (compilationRequest.getEvents() != null) {
+        if (compilationRequest.getEvents() != null || !compilationRequest.getEvents().isEmpty()) {
             eventEntities = eventsRepository.findAllById(compilationRequest.getEvents());
         }
         CompilationEntity compilationEntity = new CompilationEntity();
@@ -43,6 +45,7 @@ public class CompilationsServiceImpl implements CompilationsService {
     }
 
     @Override
+    @Transactional
     public void deleteCompilations(Long compId) {
         compilationsRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
@@ -50,6 +53,7 @@ public class CompilationsServiceImpl implements CompilationsService {
     }
 
     @Override
+    @Transactional
     public CompilationResponse updateCompilations(long compId, CompilationUpdateRequest compilationRequest) {
         CompilationEntity compilationEntity = compilationsRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
@@ -59,7 +63,6 @@ public class CompilationsServiceImpl implements CompilationsService {
             eventEntities = eventsRepository.findAllById(compilationRequest.getEvents());
             compilationEntity.setEvents(new HashSet<>(eventEntities));
         }
-
 
         compilationEntity.setTitle(compilationRequest.getTitle() == null
                 ? compilationEntity.getTitle() : compilationRequest.getTitle());

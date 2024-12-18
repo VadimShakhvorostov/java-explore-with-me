@@ -17,25 +17,25 @@ import ru.practicum.main.dto.compilation.CompilationUpdateRequest;
 import ru.practicum.main.service.compilations.CompilationsService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/compilations")
 @AllArgsConstructor
 public class AdminCompilationsController {
 
     private final CompilationsService compilationsService;
 
-    @PostMapping("/compilations")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationResponse addCompilations(@RequestBody @Valid CompilationRequest compilationsDto) {
         return compilationsService.addNewCompilations(compilationsDto);
     }
 
-    @DeleteMapping("/compilations/{compId}")
+    @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilations(@PathVariable Long compId) {
         compilationsService.deleteCompilations(compId);
     }
 
-    @PatchMapping("/compilations/{compId}")
+    @PatchMapping("/{compId}")
     public CompilationResponse updateCompilation(@PathVariable Long compId, @RequestBody @Valid CompilationUpdateRequest compilationRequest) {
         return compilationsService.updateCompilations(compId, compilationRequest);
     }

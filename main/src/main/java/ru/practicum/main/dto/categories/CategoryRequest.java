@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoriesRequest {
+public class CategoryRequest {
     @NotBlank
     @Size(min = 1, max = 50)
     private String name;

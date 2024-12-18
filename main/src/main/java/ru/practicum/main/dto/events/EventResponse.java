@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.main.dto.categories.CategoriesResponse;
+import ru.practicum.main.dto.categories.CategoryResponse;
 import ru.practicum.main.dto.location.LocationDto;
 import ru.practicum.main.dto.users.UserResponse;
 import ru.practicum.main.enums.States;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class EventResponse {
     private String annotation;
-    private CategoriesResponse category;
+    private CategoryResponse category;
     private long confirmedRequests;
 
     private String createdOn;

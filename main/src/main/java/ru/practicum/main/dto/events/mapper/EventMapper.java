@@ -1,7 +1,7 @@
 package ru.practicum.main.dto.events.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.main.dto.categories.CategoriesResponse;
+import ru.practicum.main.dto.categories.CategoryResponse;
 import ru.practicum.main.dto.events.EventSimpleResponse;
 import ru.practicum.main.dto.events.EventRequest;
 import ru.practicum.main.dto.events.EventResponse;
@@ -9,7 +9,7 @@ import ru.practicum.main.dto.location.LocationDto;
 import ru.practicum.main.dto.users.UserPrivateResponse;
 import ru.practicum.main.dto.users.UserResponse;
 import ru.practicum.main.enums.States;
-import ru.practicum.main.repositories.categories.CategoriesEntity;
+import ru.practicum.main.repositories.categories.CategoryEntity;
 import ru.practicum.main.repositories.events.EventEntity;
 import ru.practicum.main.repositories.users.UserEntity;
 
@@ -22,11 +22,11 @@ public class EventMapper {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public EventEntity toEventEntity(EventRequest eventRequest, CategoriesEntity categoriesEntity, UserEntity userEntity) {
+    public EventEntity toEventEntity(EventRequest eventRequest, CategoryEntity categoryEntity, UserEntity userEntity) {
         EventEntity eventEntity = new EventEntity();
 
         eventEntity.setAnnotation(eventRequest.getAnnotation());
-        eventEntity.setCategory(categoriesEntity);
+        eventEntity.setCategory(categoryEntity);
 
         eventEntity.setConfirmedRequests(0L);
         eventEntity.setCreatedOn(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
@@ -58,7 +58,7 @@ public class EventMapper {
         EventResponse eventResponse = new EventResponse();
 
         eventResponse.setAnnotation(eventEntity.getAnnotation());
-        eventResponse.setCategory(new CategoriesResponse(eventEntity.getCategory().getId(), eventEntity.getCategory().getName()));
+        eventResponse.setCategory(new CategoryResponse(eventEntity.getCategory().getId(), eventEntity.getCategory().getName()));
         eventResponse.setConfirmedRequests(eventEntity.getConfirmedRequests());
 
         eventResponse.setCreatedOn(eventEntity.getCreatedOn().format(formatter));
@@ -92,7 +92,7 @@ public class EventMapper {
         EventSimpleResponse response = new EventSimpleResponse();
 
         response.setAnnotation(eventEntity.getAnnotation());
-        response.setCategory(new CategoriesResponse(
+        response.setCategory(new CategoryResponse(
                 eventEntity.getCategory().getId(),
                 eventEntity.getCategory().getName()));
         response.setConfirmedRequests(eventEntity.getConfirmedRequests());

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.main.dto.categories.CategoriesResponse;
+import ru.practicum.main.dto.categories.CategoryResponse;
 import ru.practicum.main.dto.users.UserPrivateResponse;
 
 @Getter
@@ -14,7 +14,7 @@ import ru.practicum.main.dto.users.UserPrivateResponse;
 public class EventSimpleResponse {
 
     private String annotation;
-    private CategoriesResponse category;
+    private CategoryResponse category;
     private long confirmedRequests;
 
     private String eventDate;

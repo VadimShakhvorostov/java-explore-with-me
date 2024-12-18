@@ -1,5 +1,6 @@
 package ru.practicum.main.controller.publi;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,22 +13,22 @@ import ru.practicum.main.service.compilations.CompilationsService;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("/compilations")
 @AllArgsConstructor
 public class PublicCompilationsController {
 
     private final CompilationsService compilationsService;
 
-    @GetMapping("/compilations")
+    @GetMapping
     public List<CompilationResponse> getCompilations(
             @RequestParam(defaultValue = "false") Boolean pinned,
             @RequestParam(defaultValue = "0") int from,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") @PositiveOrZero int size
     ) {
         return compilationsService.getCompilations(pinned, from, size);
     }
 
-    @GetMapping("/compilations/{compId}")
+    @GetMapping("/{compId}")
     public CompilationResponse getCompilationById(@PathVariable Long compId) {
         return compilationsService.getCompilation(compId);
     }

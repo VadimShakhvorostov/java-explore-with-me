@@ -1,5 +1,6 @@
 package ru.practicum.main.service.requests;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.main.dto.request.RequestDtoResponse;
@@ -32,6 +33,7 @@ public class RequestServiceImpl implements RequestService {
     private final RequestMapper requestMapper;
 
     @Override
+    @Transactional
     public RequestDtoResponse addRequestUser(Long userId, Long eventId) {
 
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " not found"));
@@ -103,6 +105,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public RequestDtoResponse cancelRequestUser(long userId, long requestId) {
         validateUserId(userId);
         RequestEntity requestEntity = requestRepository.findById(requestId)
@@ -116,6 +119,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public RequestListResponse changeStatusRequestUser(long userId, long eventId, RequestRequest requestRequest) {
         validateUserId(userId);
         EventEntity eventEntity = eventsRepository.findById(eventId)

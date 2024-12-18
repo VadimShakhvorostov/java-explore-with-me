@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import ru.practicum.main.enums.States;
-import ru.practicum.main.repositories.categories.CategoriesEntity;
+import ru.practicum.main.repositories.categories.CategoryEntity;
 import ru.practicum.main.repositories.users.UserEntity;
 
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ public class EventEntity {
     private String annotation;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categories_id")
-    private CategoriesEntity category;
+    private CategoryEntity category;
     private Long confirmedRequests;
     private LocalDateTime createdOn;
     private String description;
