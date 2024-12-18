@@ -31,7 +31,7 @@ public class CompilationsServiceImpl implements CompilationsService {
     public CompilationResponse addNewCompilations(CompilationRequest compilationRequest) {
 
         List<EventEntity> eventEntities = new ArrayList<>();
-        if (compilationRequest.getEvents() != null || !compilationRequest.getEvents().isEmpty()) {
+        if (compilationRequest.getEvents() != null && !compilationRequest.getEvents().isEmpty()) {
             eventEntities = eventsRepository.findAllById(compilationRequest.getEvents());
         }
         CompilationEntity compilationEntity = new CompilationEntity();
