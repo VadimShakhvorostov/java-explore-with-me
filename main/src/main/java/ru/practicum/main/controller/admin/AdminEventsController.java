@@ -1,7 +1,7 @@
 package ru.practicum.main.controller.admin;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,7 +35,7 @@ public class AdminEventsController {
             @RequestParam(required = false) String rangeStart,
             @RequestParam(required = false) String rangeEnd,
             @RequestParam(required = false, defaultValue = "0") int from,
-            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
+            @RequestParam(required = false, defaultValue = "10") @Positive int size
     ) {
 
         LocalDateTime start = rangeStart != null ? LocalDateTime.parse(rangeStart, dateTimeFormatter) : null;
