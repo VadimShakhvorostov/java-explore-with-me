@@ -47,7 +47,6 @@ public class StatsClient {
             start = start.replace(" ", "T");
             end = end.replace(" ", "T");
         }
-
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverUrl + "/stats")
                 .queryParam("start", start)
                 .queryParam("end", end);
