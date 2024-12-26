@@ -1,5 +1,5 @@
 package ru.practicum.main.enums;
 
 public enum Sort {
-    EVENT_DATE, VIEWS
+    EVENT_DATE, VIEWS, RATING
 }

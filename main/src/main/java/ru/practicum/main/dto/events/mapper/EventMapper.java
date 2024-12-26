@@ -85,6 +85,10 @@ public class EventMapper {
         eventResponse.setTitle(eventEntity.getTitle());
         eventResponse.setViews(eventEntity.getViews());
 
+        eventResponse.setLikeCount(eventEntity.getLikeCount());
+        eventResponse.setDislikeCount(eventEntity.getDislikeCount());
+        eventResponse.setRating(eventEntity.getRating());
+
         return eventResponse;
     }
 
@@ -107,6 +111,10 @@ public class EventMapper {
         response.setPaid(eventEntity.getPaid());
         response.setTitle(eventEntity.getTitle());
         response.setViews(eventEntity.getViews());
+
+        response.setLikeCount(eventEntity.getLikeCount());
+        response.setDislikeCount(eventEntity.getDislikeCount());
+        response.setRating(eventEntity.getRating());
 
         return response;
     }

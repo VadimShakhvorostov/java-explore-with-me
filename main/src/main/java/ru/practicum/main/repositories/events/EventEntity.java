@@ -53,4 +53,7 @@ public class EventEntity {
     private States state;
     private String title;
     private Long views;
+    private long likeCount;
+    private long dislikeCount;
+    private float rating;
 }

@@ -36,4 +36,8 @@ public class EventResponse {
     private States state;
     private String title;
     private long views;
+
+    private long likeCount;
+    private long dislikeCount;
+    private float rating;
 }

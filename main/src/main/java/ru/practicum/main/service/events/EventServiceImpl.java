@@ -32,6 +32,7 @@ import ru.practicum.main.repositories.categories.CategoryEntity;
 import ru.practicum.main.repositories.categories.CategoryRepository;
 import ru.practicum.main.repositories.events.EventEntity;
 import ru.practicum.main.repositories.events.EventsRepository;
+import ru.practicum.main.repositories.rating.RatingRepository;
 import ru.practicum.main.repositories.users.UserEntity;
 import ru.practicum.main.repositories.users.UserRepository;
 
@@ -325,10 +326,11 @@ public class EventServiceImpl implements EventService {
         query.select(root).where(predicates.toArray(new Predicate[0]));
 
         if (sort != null) {
-            if (sort == Sort.EVENT_DATE) {
-                query.orderBy(criteriaBuilder.asc(root.get("eventDate")));
-            } else {
-                query.orderBy(criteriaBuilder.asc(root.get("views")));
+            switch (sort) {
+                case EVENT_DATE -> query.orderBy(criteriaBuilder.asc(root.get("eventDate")));
+                case VIEWS -> query.orderBy(criteriaBuilder.asc(root.get("views")));
+                case RATING -> query.orderBy(criteriaBuilder.desc(root.get("rating")));
+                default -> throw new DateException("sort is not supported");
             }
         }
 
