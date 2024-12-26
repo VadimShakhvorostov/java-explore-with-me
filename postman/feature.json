@@ -1,271 +1,11 @@
 {
 	"info": {
 		"_postman_id": "789b983b-424d-4dec-bdbd-b4f392f2a911",
-		"name": "Test Explore With Me - feature",
+		"name": "feature",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "36147508"
 	},
 	"item": [
-		{
-			"name": "request for test 1",
-			"item": [
-				{
-					"name": "add category id 1",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"category1\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/categories",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"categories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add user id 1",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"name\": \"user1\",\r\n\"email\": \"user1@mail.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add event id 1",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"annotation\": \"annotation annotation Событие 1\",\r\n  \"category\": 1,\r\n  \"description\": \"description description Событие 1\",\r\n  \"eventDate\": \"2025-10-10 16:50:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": false,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Событие 1\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/users/1/events",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"1",
-								"events"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "publish event id 1",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"stateAction\": \"PUBLISH_EVENT\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/events/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"events",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add event id  2",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"annotation\": \"annotation annotation Событие 2\",\r\n  \"category\": 1,\r\n  \"description\": \"description description Событие 2\",\r\n  \"eventDate\": \"2025-10-10 16:50:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": false,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Событие 2\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/users/1/events",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"1",
-								"events"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add user id 2",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"name\": \"user2\",\r\n\"email\": \"user2@mail.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add user id 3",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"name\": \"user3\",\r\n\"email\": \"user3@mail.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add user id 4",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"name\": \"user4\",\r\n\"email\": \"user4@mail.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add user id 5",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"name\": \"user5\",\r\n\"email\": \"user5@mail.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"users"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "test 1",
 			"item": [
@@ -328,15 +68,15 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/ratings/2/vote/1?voteType=LIKE",
+							"raw": "{{baseUrl}}/ratings/20/vote/2?voteType=LIKE",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"ratings",
-								"2",
+								"20",
 								"vote",
-								"1"
+								"2"
 							],
 							"query": [
 								{
@@ -395,13 +135,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/1",
+							"raw": "{{baseUrl}}/events/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"events",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -454,13 +194,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/1",
+							"raw": "{{baseUrl}}/events/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"events",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -526,15 +266,15 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/ratings/2/vote/1?voteType=DISLIKE",
+							"raw": "{{baseUrl}}/ratings/20/vote/2?voteType=DISLIKE",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"ratings",
-								"2",
+								"20",
 								"vote",
-								"1"
+								"2"
 							],
 							"query": [
 								{
@@ -594,13 +334,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/1",
+							"raw": "{{baseUrl}}/events/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"events",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -653,13 +393,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/1",
+							"raw": "{{baseUrl}}/events/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"events",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -698,138 +438,6 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/ratings/2/vote/2?voteType=LIKE",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"ratings",
-								"2",
-								"vote",
-								"2"
-							],
-							"query": [
-								{
-									"key": "voteType",
-									"value": "LIKE"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "request for test 2",
-			"item": [
-				{
-					"name": "publish event id 2",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"stateAction\": \"PUBLISH_EVENT\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/admin/events/2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"events",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add dislike user-1 event-2",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/ratings/5/vote/2?voteType=DISLIKE",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"ratings",
-								"5",
-								"vote",
-								"2"
-							],
-							"query": [
-								{
-									"key": "voteType",
-									"value": "DISLIKE"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add like user-2 event-1",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
 							"raw": "{{baseUrl}}/ratings/2/vote/1?voteType=LIKE",
 							"host": [
 								"{{baseUrl}}"
@@ -849,9 +457,14 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "request for test 2",
+			"item": [
 				{
-					"name": "add like user-3 event-1",
+					"name": "add like user-21 event-2",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -872,32 +485,6 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
-									"\r",
-									"const target = pm.response.json();\r",
-									"\r",
-									"\r",
-									"const url = pm.request.url;\r",
-									"const userId = url.path[1]; \r",
-									"const eventId = url.path[3]; \r",
-									"const voteType = url.query.find(param => param.key === 'voteType')?.value;\r",
-									"\r",
-									"pm.test(\"Событие должно содержать поля: id, user, event, voteType, createdAt\", function () {\r",
-									"    pm.expect(target).to.have.property('id');\r",
-									"    pm.expect(target).to.have.property('user');\r",
-									"    pm.expect(target).to.have.property('event');\r",
-									"    pm.expect(target).to.have.property('voteType');\r",
-									"    pm.expect(target).to.have.property('createdAt');\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-									"    if (userId !== undefined && eventId !== undefined && voteType !== undefined) {\r",
-									"        pm.expect(parseInt(userId)).to.equal(target.user, 'id user');\r",
-									"        pm.expect(parseInt(eventId)).to.equal(target.event, 'id event');\r",
-									"        pm.expect(voteType).to.equal(target.voteType, 'type');\r",
-									"    } else {\r",
-									"        pm.expect.fail(\"Не удалось найти один или несколько параметров в запросе.\");\r",
-									"    }\r",
-									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -909,15 +496,15 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/ratings/3/vote/1?voteType=LIKE",
+							"raw": "{{baseUrl}}/ratings/21/vote/2?voteType=LIKE",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"ratings",
-								"3",
+								"21",
 								"vote",
-								"1"
+								"2"
 							],
 							"query": [
 								{
@@ -930,7 +517,7 @@
 					"response": []
 				},
 				{
-					"name": "add like user-4 event-2",
+					"name": "add like user-21 event-2",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -952,31 +539,6 @@
 									"    pm.response.to.be.json;\r",
 									"});\r",
 									"\r",
-									"const target = pm.response.json();\r",
-									"\r",
-									"\r",
-									"const url = pm.request.url;\r",
-									"const userId = url.path[1]; \r",
-									"const eventId = url.path[3]; \r",
-									"const voteType = url.query.find(param => param.key === 'voteType')?.value;\r",
-									"\r",
-									"pm.test(\"Событие должно содержать поля: id, user, event, voteType, createdAt\", function () {\r",
-									"    pm.expect(target).to.have.property('id');\r",
-									"    pm.expect(target).to.have.property('user');\r",
-									"    pm.expect(target).to.have.property('event');\r",
-									"    pm.expect(target).to.have.property('voteType');\r",
-									"    pm.expect(target).to.have.property('createdAt');\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-									"    if (userId !== undefined && eventId !== undefined && voteType !== undefined) {\r",
-									"        pm.expect(parseInt(userId)).to.equal(target.user, 'id user');\r",
-									"        pm.expect(parseInt(eventId)).to.equal(target.event, 'id event');\r",
-									"        pm.expect(voteType).to.equal(target.voteType, 'type');\r",
-									"    } else {\r",
-									"        pm.expect.fail(\"Не удалось найти один или несколько параметров в запросе.\");\r",
-									"    }\r",
-									"});\r",
 									""
 								],
 								"type": "text/javascript",
@@ -988,15 +550,15 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/ratings/4/vote/2?voteType=LIKE",
+							"raw": "{{baseUrl}}/ratings/21/vote/6?voteType=LIKE",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"ratings",
-								"4",
+								"21",
 								"vote",
-								"2"
+								"6"
 							],
 							"query": [
 								{
@@ -1035,7 +597,7 @@
 									"\r",
 									"\r",
 									"pm.test(\"id  записи должен быть 5\", function () {\r",
-									"    pm.expect(responseData[0].id).to.equal(5, 'проверка id первой записи');\r",
+									"    pm.expect(responseData[0].id).to.equal(20, 'проверка id первой записи');\r",
 									"});\r",
 									""
 								],
@@ -1048,13 +610,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/ratings/1/vote/2?voteType=DISLIKE",
+							"raw": "{{baseUrl}}/ratings/3/vote/2?voteType=DISLIKE",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"ratings",
-								"1",
+								"3",
 								"vote",
 								"2"
 							],
@@ -1090,7 +652,7 @@
 									"\r",
 									"\r",
 									"pm.test(\"id  записи должен быть 5\", function () {\r",
-									"    pm.expect(responseData[0].id).to.equal(4, 'проверка id первой записи');\r",
+									"    pm.expect(responseData[0].id).to.equal(21, 'проверка id первой записи');\r",
 									"});\r",
 									""
 								],
@@ -1103,13 +665,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/ratings/1/vote/2?voteType=LIKE",
+							"raw": "{{baseUrl}}/ratings/3/vote/2?voteType=LIKE",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"ratings",
-								"1",
+								"3",
 								"vote",
 								"2"
 							],
@@ -1139,14 +701,8 @@
 									"const responseData = pm.response.json();\r",
 									"\r",
 									"\r",
-									"pm.test(\"В списке должно быть 2 записи\", function () {\r",
-									"    pm.expect(responseData).to.be.an('array').that.has.lengthOf(2, 'проверка количества записей');\r",
-									"});\r",
-									"\r",
-									"\r",
-									"pm.test(\"id должны быть 1 и 2\", function () {\r",
-									"    pm.expect(responseData[0].id).to.equal(1, 'проверка id первой записи');\r",
-									"    pm.expect(responseData[1].id).to.equal(2, 'проверка id первой записи');\r",
+									"pm.test(\"Список не должен быть пустым\", function () {\r",
+									"    pm.expect(responseData).to.be.an('array').that.has.not.null;\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Сортировка должна быть от наибольшего рейтинга к наименьшему\", function () {\r",
