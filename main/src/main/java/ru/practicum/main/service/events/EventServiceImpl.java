@@ -32,7 +32,6 @@ import ru.practicum.main.repositories.categories.CategoryEntity;
 import ru.practicum.main.repositories.categories.CategoryRepository;
 import ru.practicum.main.repositories.events.EventEntity;
 import ru.practicum.main.repositories.events.EventsRepository;
-import ru.practicum.main.repositories.rating.RatingRepository;
 import ru.practicum.main.repositories.users.UserEntity;
 import ru.practicum.main.repositories.users.UserRepository;
 
