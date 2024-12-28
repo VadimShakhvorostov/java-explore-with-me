@@ -39,5 +39,5 @@ public class EventResponse {
 
     private long likeCount;
     private long dislikeCount;
-    private float rating;
+    private byte rating;
 }

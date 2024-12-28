@@ -1,6 +1,5 @@
 package ru.practicum.main.repositories.events;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -55,5 +54,5 @@ public class EventEntity {
     private Long views;
     private long likeCount;
     private long dislikeCount;
-    private float rating;
+    private byte rating;
 }

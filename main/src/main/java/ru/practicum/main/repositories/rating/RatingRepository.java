@@ -21,4 +21,7 @@ public interface RatingRepository extends JpaRepository<RatingEntity, Long> {
             and r.type = ?2
             """)
     List<RatingEntity> getRatingEntitiesByEventId(long eventId, VoteType voteType, Pageable pageable);
+
+
+    Optional<RatingEntity> getEventEntityByUserIdAndEventId(long userId, long eventId);
 }

@@ -27,5 +27,5 @@ public class EventSimpleResponse {
 
     private long likeCount;
     private long dislikeCount;
-    private float rating;
+    private byte rating;
 }

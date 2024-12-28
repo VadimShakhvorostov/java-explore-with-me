@@ -91,10 +91,9 @@ public class RatingServiceImpl implements RatingService {
                 eventEntity.setDislikeCount(eventEntity.getDislikeCount() + 1);
             }
         }
-
-        float rating = (eventEntity.getDislikeCount() + eventEntity.getLikeCount()) == 0
+        byte rating = (byte) ((eventEntity.getDislikeCount() + eventEntity.getLikeCount()) == 0
                 ? 0
-                : (float) eventEntity.getLikeCount() / (eventEntity.getDislikeCount() + eventEntity.getLikeCount());
+                : (eventEntity.getLikeCount() * 100.0) / (eventEntity.getDislikeCount() + eventEntity.getLikeCount()));
         eventEntity.setRating(rating);
 
         eventsRepository.save(eventEntity);
@@ -117,6 +116,29 @@ public class RatingServiceImpl implements RatingService {
                 .map(RatingEntity::getUser)
                 .toList();
         return users.stream().map(userMapper::toUserPrivateResponse).toList();
+    }
+
+    public void deleteVote(Long userId, Long eventId) {
+        EventEntity eventEntity = eventsRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
+
+        RatingEntity ratingEntity = ratingRepository.getEventEntityByUserIdAndEventId(userId, eventId)
+                .orElseThrow(() -> new RequestException("Rating was not found"));
+
+        switch (ratingEntity.getType()) {
+            case LIKE -> eventEntity.setLikeCount(eventEntity.getLikeCount() - 1);
+            case DISLIKE -> eventEntity.setDislikeCount(eventEntity.getDislikeCount() - 1);
+            default -> throw new RequestException("Invalid rating");
+        }
+        byte rating = (byte) ((eventEntity.getDislikeCount() + eventEntity.getLikeCount()) == 0
+                ? 0
+                : (eventEntity.getLikeCount() * 100.0) / (eventEntity.getDislikeCount() + eventEntity.getLikeCount()));
+        eventEntity.setRating(rating);
+        eventsRepository.save(eventEntity);
+
+        ratingRepository.delete(ratingEntity);
 
     }
 }
