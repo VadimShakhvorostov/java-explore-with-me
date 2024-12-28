@@ -181,7 +181,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"rating должен равняться 1\", function () {\r",
-									"    pm.expect(responseData.rating).to.equal(1, 'проверка rating');\r",
+									"    pm.expect(responseData.rating).to.equal(100, 'проверка rating');\r",
 									"});\r",
 									""
 								],
@@ -517,7 +517,7 @@
 					"response": []
 				},
 				{
-					"name": "add like user-21 event-2",
+					"name": "add like user-21 event-6",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -706,8 +706,8 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Сортировка должна быть от наибольшего рейтинга к наименьшему\", function () {\r",
-									"    pm.expect(responseData[0].rating).to.equal(1.0, 'рейтинг 1 записи');\r",
-									"    pm.expect(responseData[1].rating).to.equal(0.5, 'рейтинг 2 записи');\r",
+									"    pm.expect(responseData[0].rating).to.equal(100, 'рейтинг 1 записи');\r",
+									"    pm.expect(responseData[1].rating).to.equal(50, 'рейтинг 2 записи');\r",
 									"});\r",
 									"\r",
 									"\r",
@@ -775,6 +775,136 @@
 									"value": "1000",
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete vote user-21 event-6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ratings/21/vote/6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ratings",
+								"21",
+								"vote",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get events (должно не быть оценки)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const responseData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"const eventIdFromPath = pm.request.url.path[1]; \r",
+									"\r",
+									"pm.test(\"id события должен соответствовать значению в пути\", function () {\r",
+									"    pm.expect(responseData.id).to.equal(parseInt(eventIdFromPath), 'проверка id события');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"dislikeCount должен равняться 1\", function () {\r",
+									"    pm.expect(responseData.dislikeCount).to.equal(0, 'проверка dislikeCount');\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete vote (попытка удалить оценку которой нет)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ratings/21/vote/6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ratings",
+								"21",
+								"vote",
+								"6"
 							]
 						}
 					},
